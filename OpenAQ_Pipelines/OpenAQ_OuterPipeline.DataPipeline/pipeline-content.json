@@ -1,0 +1,282 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "WebActivity",
+        "typeProperties": {
+          "method": "GET",
+          "relativeUrl": "locations?coordinates=40.7128%2C-74.0061&radius=25000&limit=1000&page=1&order_by=id&sort_order=asc",
+          "headers": {
+            "X-API-Key": {
+              "value": "@pipeline().parameters.Key",
+              "type": "Expression"
+            }
+          }
+        },
+        "externalReferences": {
+          "connection": "b7e26cf1-7df3-4af2-8b52-12e182faa524"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Web1",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": true,
+          "items": {
+            "value": "@activity('Web1').output.results",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "sensor1",
+                "value": {
+                  "value": "@union(item().sensors, variables('sensor'))",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable1",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "sensor",
+                "value": {
+                  "value": "@variables('sensor1')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable2",
+              "dependsOn": [
+                {
+                  "activity": "Set variable1",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "innerPipelineInput": {
+                    "value": "@variables('sensor')",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "742d1f01-1b60-4625-91e5-0f5292a76adc",
+                "pipelineId": "3496c481-4d81-4dce-805b-6b36b3a59b79",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "d3529e21-36c4-4d80-8484-0c4621d97f0e"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Invoke pipeline1",
+              "dependsOn": [
+                {
+                  "activity": "Set variable2",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "ids",
+                "value": {
+                  "value": "@union(activity('Invoke pipeline1').output.properties.returnValue.innerPipelineOutput, variables('ids1'))",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable3",
+              "dependsOn": [
+                {
+                  "activity": "Invoke pipeline1",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "ids1",
+                "value": {
+                  "value": "@variables('ids')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable4",
+              "dependsOn": [
+                {
+                  "activity": "Set variable3",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
+        "dependsOn": [
+          {
+            "activity": "Web1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "batchCount": 3,
+          "items": {
+            "value": "@json(activity('Notebook1').output.result.exitValue)",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "innerCopyInput": {
+                    "value": "@string(item())",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "94fd3120-e188-a810-4c41-43174e3d5903",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "d3529e21-36c4-4d80-8484-0c4621d97f0e"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Invoke pipeline2",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach2",
+        "dependsOn": [
+          {
+            "activity": "ForEach1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Notebook1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "221d1cd2-1e5b-ba1b-45c5-28c6ca4e5d07",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "ids": {
+              "value": {
+                "value": "@string(activity('Web1').output)",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Notebook1",
+        "dependsOn": [
+          {
+            "activity": "Web1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "Key": {
+        "type": "string",
+        "defaultValue": "aa60322c502183d91822d637f30378b5490718de7b81528c9b385f45275ec727"
+      }
+    },
+    "variables": {
+      "sensor1": {
+        "type": "Array"
+      },
+      "sensor": {
+        "type": "Array"
+      },
+      "ids": {
+        "type": "Array"
+      },
+      "ids1": {
+        "type": "Array"
+      },
+      "ids2": {
+        "type": "Array"
+      }
+    }
+  }
+}

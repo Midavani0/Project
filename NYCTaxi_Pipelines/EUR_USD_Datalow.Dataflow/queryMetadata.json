@@ -1,0 +1,44 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowModernEvaluationEngine": true
+  },
+  "name": "EUR_USD_Datalow",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "NYC_GDP": {
+      "queryId": "5581b90c-355a-43cd-b73e-b1effe9fdc70",
+      "queryName": "NYC_GDP",
+      "loadEnabled": false
+    },
+    "EUR_USD": {
+      "queryId": "e5c81fb2-032b-4614-a7e9-ea5cfcb12c64",
+      "queryName": "EUR_USD",
+      "loadEnabled": false
+    },
+    "DefaultDestination": {
+      "queryId": "a8c145cb-a50e-4365-9f44-a3f89a2d0fae",
+      "queryName": "DefaultDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "https://api.worldbank.org/v2/country/USA/indicator/NY.GDP.MKTP.CD",
+      "kind": "Web",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"1b1d9bb2-f66d-4705-9730-98e02e3cc284\"}"
+    },
+    {
+      "path": "https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A",
+      "kind": "Web",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"844b7628-735b-4c87-8105-1696fe60a0b0\"}"
+    },
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"d24a5046-9557-4161-a816-471be54a9ea3\"}"
+    }
+  ]
+}

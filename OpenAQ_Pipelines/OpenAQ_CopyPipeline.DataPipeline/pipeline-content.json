@@ -1,0 +1,284 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Until",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(formatDateTime(variables('lastRecord'),'yyyy-MM-dd'), formatDateTime(variables('i'), 'yyyy-MM-dd'))",
+            "type": "Expression"
+          },
+          "timeout": "0.12:00:00",
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "JsonSource",
+                  "formatSettings": {
+                    "type": "JsonReadSettings"
+                  },
+                  "storeSettings": {
+                    "type": "HttpReadSettings",
+                    "requestMethod": "GET",
+                    "additionalHeaders": "X-API-Key: aa60322c502183d91822d637f30378b5490718de7b81528c9b385f45275ec727",
+                    "requestTimeout": ""
+                  },
+                  "datasetSettings": {
+                    "type": "Json",
+                    "typeProperties": {
+                      "location": {
+                        "type": "HttpServerLocation",
+                        "relativeUrl": {
+                          "value": "@concat('v3/sensors/', pipeline().parameters.innerCopyInput, '/measurements/hourly?datetime_to=', formatDateTime(addToTime(variables('j'), 1, 'Month'), 'yyyy-MM-dd'),'&datetime_from=',variables('i'), '&limit=1000')",
+                          "type": "Expression"
+                        }
+                      }
+                    },
+                    "schema": {},
+                    "externalReferences": {
+                      "connection": "c53be660-6ae5-4e3f-8fc9-8432df7f7aae"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "Append",
+                  "applyVOrder": false,
+                  "enableTimestampNtz": false,
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "schema": "OpenAQ_Raw",
+                      "table": {
+                        "value": "@pipeline().parameters.innerCopyInput",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "Project_Lakehouse",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "95a5d6d9-c27c-b2a7-4084-9b2fa0e81625",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  },
+                  "columnFlattenSettings": {
+                    "treatArrayAsString": false,
+                    "treatStructAsString": false,
+                    "flattenColumnDelimiter": "."
+                  }
+                },
+                "enableStaging": false,
+                "enableSkipIncompatibleRow": true
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy data1",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "i",
+                "value": {
+                  "value": "@formatDateTime(addToTime(variables('j'), 1, 'Month'), 'yyyy-MM-dd')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable1",
+              "dependsOn": [
+                {
+                  "activity": "Copy data1",
+                  "dependencyConditions": [
+                    "Completed"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "j",
+                "value": {
+                  "value": "@variables('i')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable2",
+              "dependsOn": [
+                {
+                  "activity": "Set variable1",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "Until1",
+        "dependsOn": [
+          {
+            "activity": "ForEach1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "WebActivity",
+        "typeProperties": {
+          "method": "GET",
+          "relativeUrl": {
+            "value": "@concat('/sensors/', pipeline().parameters.innerCopyInput)",
+            "type": "Expression"
+          },
+          "headers": {
+            "X-API-Key": "aa60322c502183d91822d637f30378b5490718de7b81528c9b385f45275ec727"
+          }
+        },
+        "externalReferences": {
+          "connection": "b7e26cf1-7df3-4af2-8b52-12e182faa524"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Web1",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Web1').output.results",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "i",
+                "value": {
+                  "value": "@formatDateTime(formatDateTime(item().datetimeFirst.utc, 'yyyy-MM'), 'yyyy-MM-dd')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable3",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "j",
+                "value": {
+                  "value": "@variables('i')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable4",
+              "dependsOn": [
+                {
+                  "activity": "Set variable3",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "lastRecord",
+                "value": {
+                  "value": "@formatDateTime(formatDateTime(item().datetimeLast.utc, 'yyyy-MM'), 'yyyy-MM-dd')",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set variable3_copy1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "Web1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "innerCopyInput": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "check": {
+        "type": "Integer",
+        "defaultValue": 0
+      },
+      "i": {
+        "type": "String",
+        "defaultValue": "2025-01-01"
+      },
+      "j": {
+        "type": "String",
+        "defaultValue": "2025-01-01"
+      },
+      "lastRecord": {
+        "type": "String"
+      }
+    }
+  }
+}

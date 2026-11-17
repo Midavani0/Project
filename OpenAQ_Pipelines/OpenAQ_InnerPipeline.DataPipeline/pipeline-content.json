@@ -1,0 +1,71 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "ForEach1",
+        "type": "ForEach",
+        "dependsOn": [],
+        "typeProperties": {
+          "items": {
+            "value": "@pipeline().parameters.innerPipelineInput",
+            "type": "Expression"
+          },
+          "isSequential": true,
+          "activities": [
+            {
+              "name": "Append variable1",
+              "type": "AppendVariable",
+              "dependsOn": [],
+              "typeProperties": {
+                "variableName": "ids",
+                "value": {
+                  "value": "@item().id",
+                  "type": "Expression"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Set variable1",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "ForEach1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "pipelineReturnValue",
+          "value": [
+            {
+              "key": "innerPipelineOutput",
+              "value": {
+                "type": "Expression",
+                "content": "@variables('ids')"
+              }
+            }
+          ],
+          "setSystemVariable": true
+        }
+      }
+    ],
+    "parameters": {
+      "innerPipelineInput": {
+        "type": "array"
+      }
+    },
+    "variables": {
+      "ids": {
+        "type": "Array"
+      }
+    }
+  }
+}

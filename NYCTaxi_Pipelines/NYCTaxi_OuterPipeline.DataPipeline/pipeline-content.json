@@ -1,0 +1,63 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "items": {
+            "value": "@pipeline().parameters.names",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "NYCTaxi_Input": {
+                    "value": "@item()",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "0b1466c5-1075-99bf-40aa-5507b0a500e3",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "d3529e21-36c4-4d80-8484-0c4621d97f0e"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Invoke pipeline1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "names": {
+        "type": "array",
+        "defaultValue": [
+          "yellow",
+          "green",
+          "fhvhv",
+          "fhv"
+        ]
+      }
+    },
+    "variables": {
+      "k": {
+        "type": "String"
+      }
+    }
+  }
+}

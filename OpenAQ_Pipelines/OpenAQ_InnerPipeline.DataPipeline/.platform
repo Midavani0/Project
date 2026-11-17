@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "OpenAQ_InnerPipeline"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "b3a59b79-6b36-805b-4dce-4d813496c481"
+  }
+}

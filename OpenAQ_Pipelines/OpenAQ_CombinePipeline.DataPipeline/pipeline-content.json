@@ -1,0 +1,114 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "items": {
+            "value": "@json(activity('Notebook1').output.result.exitValue)",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "RefreshDataflow",
+              "typeProperties": {
+                "dataflowId": "5a4f63ed-6443-8049-4b4c-e784f3f4cb2f",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "notifyOption": "NoNotification",
+                "dataflowType": "DataflowFabric",
+                "parameters": {
+                  "Parameter1": {
+                    "value": "@concat('OpenAQ_Raw.', item())",
+                    "type": "String"
+                  }
+                },
+                "executeMashupQueriesOnly": true
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Dataflow1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach1",
+        "dependsOn": [
+          {
+            "activity": "Notebook1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "WebActivity",
+        "typeProperties": {
+          "method": "GET",
+          "relativeUrl": "locations?coordinates=40.7128%2C-74.0061&radius=25000&limit=1000&page=1&order_by=id&sort_order=asc",
+          "headers": {
+            "X-API-Key": {
+              "value": "@pipeline().parameters.Key",
+              "type": "Expression"
+            }
+          }
+        },
+        "externalReferences": {
+          "connection": "b7e26cf1-7df3-4af2-8b52-12e182faa524"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Web1",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "221d1cd2-1e5b-ba1b-45c5-28c6ca4e5d07",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "ids": {
+              "value": {
+                "value": "@string(activity('Web1').output)",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Notebook1",
+        "dependsOn": [
+          {
+            "activity": "Web1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "Key": {
+        "type": "string",
+        "defaultValue": "aa60322c502183d91822d637f30378b5490718de7b81528c9b385f45275ec727"
+      }
+    }
+  }
+}

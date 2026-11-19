@@ -1,0 +1,48 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowModernEvaluationEngine": true
+  },
+  "name": "OpenAQ_CombineDataflow",
+  "queryGroups": [
+    {
+      "id": "aa4c4525-953d-463a-b878-dc85f7e57d3d",
+      "name": "combine"
+    }
+  ],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "Invoked function": {
+      "queryId": "386029c5-ed5d-42eb-a288-b335b86084d9",
+      "queryName": "Invoked function",
+      "queryGroupId": "aa4c4525-953d-463a-b878-dc85f7e57d3d",
+      "loadEnabled": false
+    },
+    "Invoked function_DataDestination": {
+      "queryId": "cc2746ea-4b26-4a74-ae3d-e76e9423a39b",
+      "queryName": "Invoked function_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Parameter1": {
+      "queryId": "74451c3b-d778-430b-90f0-1f8aad400c18",
+      "queryName": "Parameter1",
+      "queryGroupId": "aa4c4525-953d-463a-b878-dc85f7e57d3d",
+      "loadEnabled": false
+    },
+    "combine": {
+      "queryId": "2bf2c161-161f-4f2e-934b-764ea348d715",
+      "queryName": "combine",
+      "queryGroupId": "aa4c4525-953d-463a-b878-dc85f7e57d3d",
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"d24a5046-9557-4161-a816-471be54a9ea3\"}"
+    }
+  ],
+  "parametric": true
+}

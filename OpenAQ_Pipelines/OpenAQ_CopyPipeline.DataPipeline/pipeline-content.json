@@ -5,7 +5,7 @@
         "type": "Until",
         "typeProperties": {
           "expression": {
-            "value": "@equals(formatDateTime(variables('lastRecord'),'yyyy-MM-dd'), formatDateTime(variables('i'), 'yyyy-MM-dd'))",
+            "value": "@equals(formatDateTime(variables('lastRecord'),'yyyy-MM-dd'), formatDateTime(addToTime(variables('i'),1 ,'Month') ,'yyyy-MM-dd'))",
             "type": "Expression"
           },
           "timeout": "0.12:00:00",

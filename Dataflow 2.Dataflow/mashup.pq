@@ -19,6 +19,6 @@ shared #"Invoked function_DataDestination" = let
   Navigation_1 = Pattern{[workspaceId = "742d1f01-1b60-4625-91e5-0f5292a76adc"]}[Data],
   Navigation_2 = Navigation_1{[lakehouseId = "a0e81625-9b2f-4084-b2a7-c27c95a5d6d9"]}[Data],
   Navigation_3 = Navigation_2{[Id = "OpenAQ_AddedCoordinates", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = 671, ItemKind = "Table"]}?[Data]?
+  TableNavigation = Navigation_3{[Id = Parameter1, ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;

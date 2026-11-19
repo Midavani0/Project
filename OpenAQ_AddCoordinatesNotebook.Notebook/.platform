@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "OpenAQ_AddCoordinatesNotebook"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6a45f0f7-9705-8439-46fd-dd75c9320c4e"
+  }
+}

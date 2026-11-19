@@ -1,0 +1,50 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowModernEvaluationEngine": true
+  },
+  "name": "Dataflow 2",
+  "queryGroups": [
+    {
+      "id": "964579b6-8b53-4584-b097-8d640a43a3ea",
+      "name": "combine",
+      "description": "",
+      "order": 1
+    }
+  ],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "Invoked function": {
+      "queryId": "ddad633f-6784-481d-be90-56e2401a7761",
+      "queryName": "Invoked function",
+      "queryGroupId": "964579b6-8b53-4584-b097-8d640a43a3ea",
+      "loadEnabled": false
+    },
+    "Invoked function_DataDestination": {
+      "queryId": "d340840e-e403-4548-a7bc-a307c7ce2d75",
+      "queryName": "Invoked function_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Parameter1": {
+      "queryId": "18d61af2-8fe6-46ad-94b4-6a692478f7c2",
+      "queryName": "Parameter1",
+      "queryGroupId": "964579b6-8b53-4584-b097-8d640a43a3ea",
+      "loadEnabled": false
+    },
+    "combine": {
+      "queryId": "29a5fdcc-59c1-4554-8a83-e9734ae19a91",
+      "queryName": "combine",
+      "queryGroupId": "964579b6-8b53-4584-b097-8d640a43a3ea",
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"d24a5046-9557-4161-a816-471be54a9ea3\"}"
+    }
+  ],
+  "parametric": true
+}

@@ -57,14 +57,16 @@ print(result)
 
 import com.microsoft.spark.fabric
 from com.microsoft.spark.fabric.Constants import Constants  
+from pyspark.sql import functions as sf
 
 tables = spark.catalog.listTables("OpenAQ_Raw")
 
 for table in tables:
     for i in result.keys():
-        if table.name in result[i]:
+        if table.name.replace("raw_", "") in result[i]:
+            print(table.name)
             df = spark.read.synapsesql(f"Project_Lakehouse.OpenAQ_Raw.{table.name}")
-            df = df.withColumn('coordinates', i)
+            df = df.withColumn('coordinates', sf.lit(i))
             df.write.mode("overwrite").format("delta").option("overwriteSchema", "true").saveAsTable(f"Project_Lakehouse.OpenAQ_Raw.{table.name}")
 
             

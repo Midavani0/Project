@@ -19,7 +19,10 @@
                 "dataflowType": "DataflowFabric",
                 "parameters": {
                   "Parameter1": {
-                    "value": "@concat('OpenAQ_Raw.', item())",
+                    "value": {
+                      "value": "@item()",
+                      "type": "Expression"
+                    },
                     "type": "String"
                   }
                 },

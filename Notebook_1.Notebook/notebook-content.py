@@ -51,3 +51,41 @@ notebookutils.notebook.exit(json.dumps(result))
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# CELL ********************
+
+import os
+from pyspark.sql.types import StructType
+
+directory = os.fsencode("/lakehouse/default/Files/")
+
+def replaceDotsInColumnNames(df):
+    names = df.schema.names
+    new_names = dict()
+    for name in names:
+        new_names[name] = name.replace('.', '_')
+    return df.withColumnsRenamed(new_names)
+
+default_schema = replaceDotsInColumnNames(spark.read.parquet("Files/10454036/028d29f9-9f49-49e6-85d7-a281a08c3274.parquet")).schema
+
+for foulder in os.listdir(directory):
+    df = spark.createDataFrame([], StructType(default_schema))
+    for file in os.listdir(directory.decode("utf-8") + foulder.decode("utf-8")):
+        if file != '_delta_log':
+            temp = spark.read.parquet("Files/" + foulder.decode("utf-8") + '/' + file)
+            temp = replaceDotsInColumnNames(temp)
+            temp_schema = temp.schema.names
+            if temp_schema != default_schema.names:
+                continue
+            df = df.join(temp,temp_schema, "full")
+    print(foulder)
+    df.write.mode("overwrite").format("delta").option("overwriteSchema", "true").saveAsTable(f"Project_Lakehouse.OpenAQ_Raw.Raw_{foulder.decode("utf-8")}")
+
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }

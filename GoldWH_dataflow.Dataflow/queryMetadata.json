@@ -1,0 +1,69 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowModernEvaluationEngine": true
+  },
+  "name": "GoldWH_dataflow",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "DefaultDestination": {
+      "queryId": "8f252848-a0f6-4bb8-a9ad-b98772c69927",
+      "queryName": "DefaultDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "dim_fx": {
+      "queryId": "c1582563-d22c-4fe8-8541-266eab9f5710",
+      "queryName": "dim_fx"
+    },
+    "dim_fx_DataDestination": {
+      "queryId": "1bd28ffd-5cb9-442e-9529-9e57b29ae7a2",
+      "queryName": "dim_fx_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "dim_gdp": {
+      "queryId": "d30298fe-8b0f-4f08-ad87-2f2853838348",
+      "queryName": "dim_gdp"
+    },
+    "dim_gdp_DataDestination": {
+      "queryId": "4d3dcf77-75df-4e48-ad01-428a9c6f5af5",
+      "queryName": "dim_gdp_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "dim_sensor_zones": {
+      "queryId": "a053a434-af5d-4eb1-88ca-049a3bf80b4e",
+      "queryName": "dim_sensor_zones"
+    },
+    "dim_sensor_zones_DataDestination": {
+      "queryId": "1ead59bb-9080-4859-aa62-b7b4361f8f22",
+      "queryName": "dim_sensor_zones_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "nyctaxi_transformed": {
+      "queryId": "5203b203-3231-4425-8fe7-d864969d3655",
+      "queryName": "nyctaxi_transformed"
+    },
+    "nyctaxi_transformed_DataDestination": {
+      "queryId": "ab8119a1-8357-45e2-bfbb-6f0c81bc5d0f",
+      "queryName": "nyctaxi_transformed_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "Warehouse",
+      "kind": "Warehouse",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"f58c5554-b62c-4c1d-beb5-61726d25b320\"}"
+    },
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"c1db596a-b946-4dfb-98e5-8f18238ebaca\",\"DatasourceId\":\"d24a5046-9557-4161-a816-471be54a9ea3\"}"
+    }
+  ]
+}
